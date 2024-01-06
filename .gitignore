@@ -1,4 +1,5 @@
 save/
+migrations/
 .vscode/
 __pycache__/
 .hintrc

@@ -17,6 +17,45 @@ ensure_file(f"{ABSOLUTE_SAVING_PATH}next_comment.txt", default_value="1")
 # Initialize flask app
 app = flask.Flask(__name__)
 
+# Initialize database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+class User(db.Model):
+    user_id =          db.Column(db.Integer, primary_key=True)
+    username =         db.Column(db.String(MAX_USERNAME_LENGTH))
+    token =            db.Column(db.String(64))
+
+    display_name =     db.Column(db.String(MAX_USERNAME_LENGTH))
+    theme =            db.Column(db.String(30))
+    color =            db.Column(db.String(7))
+    private =          db.Column(db.Boolean)
+
+    following =        db.Column(db.PickleType())
+    posts =            db.Column(db.PickleType())
+    followers =        db.Column(db.Integer)
+
+class Posts(db.Model):
+    post_id =          db.Column(db.Integer, primary_key=True)
+    content =          db.Column(db.String(MAX_POST_LENGTH))
+    creator =          db.Column(db.Integer)
+    timestamp =        db.Column(db.Time)
+    
+    likes =            db.Column(db.PickleType)
+    comments =         db.Column(db.PickleType)
+    reposts =          db.Column(db.PickleType)
+
+class Comments(db.Model):
+    post_id =          db.Column(db.Integer, primary_key=True)
+    content =          db.Column(db.String(MAX_POST_LENGTH))
+    creator =          db.Column(db.Integer)
+    timestamp =        db.Column(db.Time)
+    
+    likes =            db.Column(db.PickleType)
+    comments =         db.Column(db.PickleType)
+    reposts =          db.Column(db.PickleType)
+
 # Create basic routes
 app.route("/", methods=["GET"])(create_html_serve("index.html", logged_in_redir=True))
 app.route("/login", methods=["GET"])(create_html_serve("login.html", logged_in_redir=True))
