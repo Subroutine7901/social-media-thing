@@ -84,11 +84,10 @@ def api_account_signup() -> flask.Response:
             "reason": "Username can only use A-Z, 0-9, underscores, and hyphens."
         }), "application/json")
 
-    else:
-        return return_dynamic_content_type(json.dumps({
-            "valid": False,
-            "reason": f"Username must be between 1 and {MAX_USERNAME_LENGTH} characters in length."
-        }), "application/json")
+    return return_dynamic_content_type(json.dumps({
+        "valid": False,
+        "reason": f"Username must be between 1 and {MAX_USERNAME_LENGTH} characters in length."
+    }), "application/json")
 
 def api_account_login() -> flask.Response:
     # Called when someone attempts to log in.
